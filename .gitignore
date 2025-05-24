@@ -1,15 +1,28 @@
+# Android Studio config files
+.idea/
 *.iml
-.gradle
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+
+# Build files and folders
+.gradle/
+build/
+.cxx/
+.externalNativeBuild/
+captures/
+
+# Temp IDE build and files
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+*.log
+
+# Ignore .idea
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# Ignore internal folders
+**/build/
+**/intermediates/
+**/generated/

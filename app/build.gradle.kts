@@ -67,10 +67,16 @@ dependencies {
     // Hilt Dagger
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler) // For Kotlin annotation processing
     implementation(libs.androidx.room.ktx) // Optional extensions for Kotlin
+
+    // Compose
+    implementation(libs.androidx.lifecycle.runtime.ktx.v287)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
 
 }
