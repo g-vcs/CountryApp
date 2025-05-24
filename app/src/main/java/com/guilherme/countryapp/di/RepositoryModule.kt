@@ -17,5 +17,4 @@ abstract class RepositoryModule {
     abstract fun bindCountryRepositoy(
         repositoryImpl: CountryRepositoryImpl
     ): ICountryRepository
-
 }

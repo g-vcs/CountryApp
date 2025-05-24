@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.guilherme.countryapp.data.local.CountryDao
 import com.guilherme.countryapp.data.local.CountryEntity
+import com.guilherme.countryapp.data.remote.CountryService
 import com.guilherme.countryapp.presentation.theme.CountryAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +31,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var country: CountryDao
+
+    @Inject
+    lateinit var api: CountryService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +96,7 @@ class MainActivity : ComponentActivity() {
                             Button(
                                 onClick = {
                                     lifecycleScope.launch(Dispatchers.IO) {
-                                        country.getCountry( "GUI").collect{ country ->
+                                        country.getCountry("GUI").collect { country ->
                                             Log.d("CountryDB", "Country in DB: $country")
                                         }
                                     }
@@ -100,6 +104,16 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 Text("Print DB")
 
+                            }
+
+                            Button(
+                                onClick = {
+                                    lifecycleScope.launch(Dispatchers.IO) {
+                                        Log.d("COUNTRY REMOTE", "${api.getAllCountries()}")
+                                    }
+                                }
+                            ) {
+                                Text("Fetch remote data")
                             }
                         }
 

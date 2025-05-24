@@ -1,8 +1,8 @@
 package com.guilherme.countryapp.data.repository
 
-import com.guilherme.countryapp.data.local.CountryDao
+import com.guilherme.countryapp.data.local.LocalRepository
 import com.guilherme.countryapp.data.mapper.toCountry
-import com.guilherme.countryapp.data.mapper.toCountryEntity
+import com.guilherme.countryapp.data.remote.RemoteRepository
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.domain.repository.ICountryRepository
 import kotlinx.coroutines.flow.Flow
@@ -10,21 +10,33 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CountryRepositoryImpl @Inject constructor(
-    private val countryDao: CountryDao
+    private val localRepository: LocalRepository,
+    private val remoteRepository: RemoteRepository
 ) : ICountryRepository {
-    override fun getCountries(): Flow<List<Country>> =
-        countryDao.getAllCountries().map { list -> list.map { it.toCountry() } }
+    override fun getCountries(): Flow<List<Country>?> {
+        return localRepository.getCountries()
+    }
 
-    override fun getCountryByName(country: String): Flow<Country?> =
-        countryDao.getCountry(country).map { it.toCountry() }
+    override fun getCountryByName(country: String): Flow<Country?> {
+        return localRepository.getCountryByName(country)
+    }
 
-    override suspend fun insertCountry(country: Country) =
-        countryDao.insertCountry(country.toCountryEntity())
+    override suspend fun insertCountry(country: Country) {
+        localRepository.insertCountry(country)
+    }
 
-    override suspend fun deleteCountry(country: Country) =
-        countryDao.deleteCountry(country.toCountryEntity())
+    override suspend fun deleteCountry(country: Country) {
+        localRepository.deleteCountry(country)
+    }
 
-    override suspend fun updateCountry(country: Country) =
-        countryDao.updateCountry(country.toCountryEntity())
+    override suspend fun updateCountry(country: Country) {
+        localRepository.updateCountry(country)
+    }
+
+    override suspend fun refreshCountriesFromRemote(): Flow<List<Country>> {
+        return remoteRepository.refreshCountriesFromRemote()
+
+    }
+
 
 }

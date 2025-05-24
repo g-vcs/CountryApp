@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.guilherme.countryapp.data.local.AppDatabase
 import com.guilherme.countryapp.data.local.CountryDao
+import com.guilherme.countryapp.data.local.LocalRepository
 import com.guilherme.countryapp.data.repository.CountryRepositoryImpl
 import com.guilherme.countryapp.domain.repository.ICountryRepository
 import dagger.Binds
