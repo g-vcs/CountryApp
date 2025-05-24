@@ -10,11 +10,11 @@ import javax.inject.Inject
 class LocalRepository @Inject constructor(
     private val countryDao: CountryDao
 ) {
-    fun getCountries(): Flow<List<Country>?> =
+    fun getCountries(): Flow<List<Country>> =
         countryDao.getAllCountries().map { list -> list.map { it.toCountry() } }
 
-    fun getCountryByName(country: String): Flow<Country?> =
-        countryDao.getCountry(country).map { it?.toCountry() }
+    fun getCountryByName(country: String): Flow<Country> =
+        countryDao.getCountry(country).map { it.toCountry() }
 
     suspend fun insertCountry(country: Country) =
         countryDao.insertCountry(country.toCountryEntity())

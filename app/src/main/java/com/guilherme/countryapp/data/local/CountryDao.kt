@@ -23,5 +23,5 @@ interface CountryDao {
     fun getAllCountries():Flow<List<CountryEntity>>
 
     @Query("SELECT * from countries WHERE cca3 = :countryName")
-    fun getCountry(countryName: String): Flow<CountryEntity?>
+    fun getCountry(countryName: String): Flow<CountryEntity>
 }

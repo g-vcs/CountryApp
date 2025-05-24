@@ -4,10 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import com.guilherme.countryapp.data.local.AppDatabase
 import com.guilherme.countryapp.data.local.CountryDao
-import com.guilherme.countryapp.data.local.LocalRepository
-import com.guilherme.countryapp.data.repository.CountryRepositoryImpl
-import com.guilherme.countryapp.domain.repository.ICountryRepository
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object CountryModule {
+object LocalCountryModule {
 
     @Provides
     @Singleton

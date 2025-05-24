@@ -1,23 +1,21 @@
 package com.guilherme.countryapp.data.repository
 
 import com.guilherme.countryapp.data.local.LocalRepository
-import com.guilherme.countryapp.data.mapper.toCountry
 import com.guilherme.countryapp.data.remote.RemoteRepository
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.domain.repository.ICountryRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CountryRepositoryImpl @Inject constructor(
     private val localRepository: LocalRepository,
     private val remoteRepository: RemoteRepository
 ) : ICountryRepository {
-    override fun getCountries(): Flow<List<Country>?> {
+    override fun getCountries(): Flow<List<Country>> {
         return localRepository.getCountries()
     }
 
-    override fun getCountryByName(country: String): Flow<Country?> {
+    override fun getCountryByName(country: String): Flow<Country> {
         return localRepository.getCountryByName(country)
     }
 
@@ -33,8 +31,9 @@ class CountryRepositoryImpl @Inject constructor(
         localRepository.updateCountry(country)
     }
 
-    override suspend fun refreshCountriesFromRemote(): Flow<List<Country>> {
-        return remoteRepository.refreshCountriesFromRemote()
+    override suspend fun refreshCountriesFromRemote() {
+        val remoteCountries = remoteRepository.refreshCountriesFromRemote()
+        remoteCountries.forEach { localRepository.insertCountry(it) }
 
     }
 
