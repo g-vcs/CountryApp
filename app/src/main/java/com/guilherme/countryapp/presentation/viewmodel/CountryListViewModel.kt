@@ -1,14 +1,17 @@
 package com.guilherme.countryapp.presentation.viewmodel
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.domain.repository.ICountryRepository
+import com.guilherme.countryapp.presentation.ui.navigation.NavigationDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+object CountryDestination : NavigationDestination {
+    override val route = "home"
+    override val TitleRes = "CountryApp"
+}
 
 @HiltViewModel
 class CountryListViewModel @Inject constructor(

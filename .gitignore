@@ -1,33 +1,57 @@
-# Gradle files
+# Ignore Android Studio and IntelliJ project files
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Ignore Gradle build directories
 .gradle/
 build/
+**/build/
 
-# Local configuration file (sdk path, etc)
+# Ignore local configuration (contains SDK paths, shouldn't be shared)
 local.properties
 
-# Log/OS Files
-*.log
-
-# Android Studio generated files and folders
+# Ignore generated files and outputs
 captures/
-.externalNativeBuild/
-.cxx/
+outputs/
 *.apk
-output-metadata.json
+*.ap_
+*.dex
+*.class
 
-# IntelliJ
-*.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
+# Ignore Jetpack Compose preview caches
+*.cache/
 
-# Keystore files
-*.jks
-*.keystore
+# Ignore log files and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
 
-# Google Services (e.g. APIs or Firebase)
-google-services.json
+# Ignore OS-specific files
+# macOS
+.DS_Store
 
-# Android Profiling
-*.hprof
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Linux
+*~
+
+# Ignore Kotlin/Java compiled files
+*.jar
+*.war
+*.ear
+
+# Ignore crash logs and debug info
+crashlytics-build.properties
+fabric.properties
+
+# Ignore NDK build artifacts
+obj/
+
+# Ignore VSCode settings (if you use it)
+.vscode/
