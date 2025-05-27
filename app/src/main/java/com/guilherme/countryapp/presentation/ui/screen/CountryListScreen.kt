@@ -1,6 +1,7 @@
 package com.guilherme.countryapp.presentation.ui.screen
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -34,77 +36,73 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.domain.model.CountryName
 import com.guilherme.countryapp.domain.model.Flags
+import com.guilherme.countryapp.presentation.ui.UiEvent
+import com.guilherme.countryapp.presentation.ui.UiState.NavigateToCountryDetails
 import com.guilherme.countryapp.presentation.viewmodel.CountryListViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CountryListScreen(
-    navigation: () -> Unit = {},
+    navigation: (Country) -> Unit = {},
+    paddingValues: PaddingValues,
     modifier: Modifier
 ) {
-    var presses by remember { mutableIntStateOf(0) }
+    val viewModel = hiltViewModel<CountryListViewModel>()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text("Top app bar")
-                }
-            )
-        },
-        bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary,
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = "Bottom app bar",
-                )
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { presses++ }) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
+    LaunchedEffect(viewModel.uiEvent) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.CountryClick -> navigation(event.country)
+                is UiEvent.AddToFavorite -> viewModel.addToFavorite(event.country)
             }
         }
-    ) { innerPadding ->
-        CountryList(modifier = Modifier.padding(innerPadding))
     }
+
+    CountryList(
+        modifier = Modifier.padding(paddingValues),
+        onCountryClick = { country ->
+            viewModel.onEvent(NavigateToCountryDetails(country))
+        }
+    )
 }
+
 
 @Composable
 fun CountryList(
-    modifier: Modifier
+    modifier: Modifier,
+    onCountryClick: (Country) -> Unit
 ) {
     val viewModel: CountryListViewModel = hiltViewModel()
     val countries = viewModel.countries.collectAsState(initial = emptyList())
-    LazyColumn (
+    LazyColumn(
         modifier = modifier
     ) {
         items(countries.value) { country ->
-            CountryItem(country)
+            CountryItem(
+                country = country,
+                onCountryClick = { onCountryClick(country) }
+            )
         }
     }
 }
 
 
 @Composable
-fun CountryItem(country: Country) {
+fun CountryItem(
+    country: Country,
+    onCountryClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 4.dp, vertical = 2.dp),
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, Color.LightGray),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        onClick = {
+            onCountryClick()
+        }
     ) {
         Text(
             modifier = Modifier.padding(12.dp),
@@ -127,6 +125,6 @@ fun PreviewCountryItem() {
             population = 10196709,
             flags = Flags(png = "", svg = "", alt = null)
 
-        )
+        ), {}
     )
 }

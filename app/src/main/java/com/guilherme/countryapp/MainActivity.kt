@@ -4,12 +4,23 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.compose.rememberNavController
 import com.guilherme.countryapp.presentation.theme.CountryAppTheme
 import com.guilherme.countryapp.presentation.ui.navigation.CountryNavHost
-import com.guilherme.countryapp.presentation.ui.screen.CountryListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,86 +34,45 @@ class MainActivity : ComponentActivity() {
         setContent {
             CountryAppTheme {
                 val navController = rememberNavController()
-                CountryNavHost(
-                    navController = navController,
-                    modifier = Modifier
-                )
-            }
-            /*Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
 
-                Column {
-                    Button(
-                        onClick = {
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                country.insertCountry(
-                                    CountryEntity(
-                                        cca3 = "GUI",
-                                        name = "Portugal",
-                                        capital = "PORTO",
-                                        region = "Europe",
-                                        subregion = "Southern Europe",
-                                        population = 10196709,
-                                        flagPng = "https://flagcdn.com/w320/pt.png",
-                                        flagSvg = "https://flagcdn.com/pt.svg"
-                                    )
-                                )
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            colors = topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                titleContentColor = MaterialTheme.colorScheme.primary,
+                            ),
+                            title = {
+                                Text("Top app bar")
                             }
+                        )
+                    },
+                    bottomBar = {
+                        BottomAppBar(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                text = "Bottom app bar",
+                            )
                         }
-                    ) {
-                        Text("Insert in DB")
-                    }
-
-                    Button(
-                        onClick = {
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                country.deleteCountry(
-                                    CountryEntity(
-                                        cca3 = "GUI",
-                                        name = "Portugal",
-                                        capital = "PORTO",
-                                        region = "Europe",
-                                        subregion = "Southern Europe",
-                                        population = 10196709,
-                                        flagPng = "https://flagcdn.com/w320/pt.png",
-                                        flagSvg = "https://flagcdn.com/pt.svg"
-                                    )
-                                )
-                            }
+                    },
+                    floatingActionButton = {
+                        FloatingActionButton(onClick = {}) {
+                            Icon(Icons.Default.Add, contentDescription = "Add")
                         }
-                    ) {
-                        Text("Delete in DB")
                     }
-
-                    Button(
-                        onClick = {
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                country.getCountry("GUI").collect { country ->
-                                    Log.d("CountryDB", "Country in DB: $country")
-                                }
-                            }
-                        }
-                    ) {
-                        Text("Print DB")
-
-                    }
-
-                    Button(
-                        onClick = {
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                Log.d("COUNTRY REMOTE", "${api.getAllCountries()}")
-                            }
-                        }
-                    ) {
-                        Text("Fetch remote data")
-                    }
+                ) { innerPadding ->
+                    CountryNavHost(
+                        navController = navController,
+                        padding = innerPadding,
+                        modifier = Modifier
+                    )
                 }
-
-
-            }*/
+            }
         }
     }
-
 }
