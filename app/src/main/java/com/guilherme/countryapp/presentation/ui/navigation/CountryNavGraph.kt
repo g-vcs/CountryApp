@@ -32,11 +32,9 @@ fun CountryNavHost(
         }
 
         composable(
-            route = "detail/{country}",
+            route = "detail/{countryName}",
         ) { backstackEntry ->
-            val country = backstackEntry.arguments?.getString("country") ?: "Unknown"
             CountryDetail(
-                country = country,
                 paddingValues = padding,
             )
         }

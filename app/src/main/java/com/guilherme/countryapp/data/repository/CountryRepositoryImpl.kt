@@ -1,5 +1,6 @@
 package com.guilherme.countryapp.data.repository
 
+import android.util.Log
 import com.guilherme.countryapp.data.local.LocalRepository
 import com.guilherme.countryapp.data.remote.RemoteRepository
 import com.guilherme.countryapp.domain.model.Country
@@ -33,6 +34,7 @@ class CountryRepositoryImpl @Inject constructor(
 
     override suspend fun refreshCountriesFromRemote() {
         val remoteCountries = remoteRepository.refreshCountriesFromRemote()
+        Log.d("NETWORK", "remote countries: $remoteCountries")
         remoteCountries.forEach { localRepository.insertCountry(it) }
 
     }

@@ -4,10 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.domain.repository.ICountryRepository
-import com.guilherme.countryapp.presentation.ui.UiEvent
-import com.guilherme.countryapp.presentation.ui.UiEvent.CountryClick
-import com.guilherme.countryapp.presentation.ui.UiState
-import com.guilherme.countryapp.presentation.ui.UiState.NavigateToCountryDetails
+import com.guilherme.countryapp.presentation.ui.events.UiCountryListEvent
+import com.guilherme.countryapp.presentation.ui.events.UiCountryListEvent.CountryClick
 import com.guilherme.countryapp.presentation.ui.navigation.NavigationDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -25,19 +23,11 @@ class CountryListViewModel @Inject constructor(
     private val repository: ICountryRepository
 ) : ViewModel() {
     val countries = repository.getCountries()
-    val _uiEvent = MutableSharedFlow<UiEvent>()
-    val uiEvent = _uiEvent.asSharedFlow()
+    val _uiCountryListEvent = MutableSharedFlow<UiCountryListEvent>()
+    val uiCountryListEvent = _uiCountryListEvent.asSharedFlow()
 
     init {
         fetchCountries()
-    }
-
-    fun onEvent(event: UiState) {
-        viewModelScope.launch {
-            when (event) {
-                is NavigateToCountryDetails -> navigateToCountryDetails(event.country)
-            }
-        }
     }
 
     fun fetchCountries() {
@@ -46,12 +36,12 @@ class CountryListViewModel @Inject constructor(
         }
     }
 
-    fun navigateToCountryDetails(country: Country) {
+    fun onCountryClicked(country: Country) {
         viewModelScope.launch {
-            _uiEvent.emit(CountryClick(country))
+            _uiCountryListEvent.emit((CountryClick(country)))
+
         }
     }
-
 
     fun addToFavorite(country: Country) {
         viewModelScope.launch {
