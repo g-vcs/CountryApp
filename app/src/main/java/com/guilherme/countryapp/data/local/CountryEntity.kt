@@ -14,5 +14,6 @@ data class CountryEntity(
     val subregion: String?,
     val population: Long?,
     val flagPng: String?,
-    val flagSvg: String?
+    val flagSvg: String?,
+    val isFavorite: Boolean ?= false
 )

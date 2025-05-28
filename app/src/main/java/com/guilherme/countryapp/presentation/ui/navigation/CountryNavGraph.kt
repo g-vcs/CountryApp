@@ -25,17 +25,19 @@ fun CountryNavHost(
             route = CountryDestination.route,
         ) {
             CountryListScreen(
-                navigation = { country -> navController.navigate("detail/${country.name?.common}") },
+                navigation = { country -> navController.navigate("detail/${country.cca3}") },
                 paddingValues = padding,
                 modifier = Modifier
             )
         }
 
         composable(
-            route = "detail/{countryName}",
+            route = "detail/{cca3}",
         ) { backstackEntry ->
+            val cca3 = backstackEntry.arguments?.getString("cca3") ?: "UNKNOWN"
             CountryDetail(
                 paddingValues = padding,
+                cca3 = cca3
             )
         }
     }

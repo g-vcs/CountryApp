@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -20,14 +21,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.guilherme.countryapp.presentation.viewmodel.CountryDetailViewModel
+
 
 @Composable
 fun CountryDetail(
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    cca3: String,
 ) {
     val viewmodel: CountryDetailViewModel = hiltViewModel()
-    val country by viewmodel.countryFlow.collectAsState()
+    val country by viewmodel.state.collectAsState()
+
+    LaunchedEffect(cca3) {
+        viewmodel.loadClickedCountry(cca3)
+    }
 
     Column(
         modifier = Modifier
@@ -36,9 +44,8 @@ fun CountryDetail(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Country Name
         Text(
-            text = country?.name?.common ?: "Unknown",
+            text = country.selectedCountry?.name?.common ?: "Unknown",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.fillMaxWidth(),
@@ -47,12 +54,20 @@ fun CountryDetail(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Details
-        CountryInfoRow(label = "Official Name", value = country?.name?.official ?: "N/A")
-        CountryInfoRow(label = "Capital", value = country?.capital?.joinToString() ?: "N/A")
-        CountryInfoRow(label = "Region", value = country?.region ?: "N/A")
-        CountryInfoRow(label = "Subregion", value = country?.subregion ?: "N/A")
-        CountryInfoRow(label = "Population", value = "%,d".format(country?.population ?: 0))
+        CountryInfoRow(
+            label = "Official Name",
+            value = country.selectedCountry?.name?.official ?: "N/A"
+        )
+        CountryInfoRow(
+            label = "Capital",
+            value = country.selectedCountry?.capital?.joinToString() ?: "N/A"
+        )
+        CountryInfoRow(label = "Region", value = country.selectedCountry?.region ?: "N/A")
+        CountryInfoRow(label = "Subregion", value = country.selectedCountry?.subregion ?: "N/A")
+        CountryInfoRow(
+            label = "Population",
+            value = "%,d".format(country.selectedCountry?.population ?: 0)
+        )
     }
 }
 

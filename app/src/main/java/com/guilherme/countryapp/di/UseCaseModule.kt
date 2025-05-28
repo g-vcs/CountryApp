@@ -4,6 +4,7 @@ import com.guilherme.countryapp.domain.usecase.CountryUseCases
 import com.guilherme.countryapp.domain.usecase.DeleteCountryUseCase
 import com.guilherme.countryapp.domain.usecase.GetAllCountriesUseCase
 import com.guilherme.countryapp.domain.usecase.GetCountryByNameUseCase
+import com.guilherme.countryapp.domain.usecase.GetFavoriteCountriesUseCase
 import com.guilherme.countryapp.domain.usecase.InsertCountryUseCase
 import com.guilherme.countryapp.domain.usecase.RefreshCountriesFromRemoteUseCase
 import com.guilherme.countryapp.domain.usecase.UpdateCountryUseCase
@@ -25,6 +26,7 @@ object UseCaseModule {
         deleteCountryUseCase: DeleteCountryUseCase,
         getAllCountriesUseCase: GetAllCountriesUseCase,
         getCountryByNameUseCase: GetCountryByNameUseCase,
+        getFavoriteCountriesUseCase: GetFavoriteCountriesUseCase,
         refreshCountriesFromRemoteUseCase: RefreshCountriesFromRemoteUseCase
     ): CountryUseCases {
         return CountryUseCases(
@@ -33,6 +35,7 @@ object UseCaseModule {
             deleteCountryUseCase = deleteCountryUseCase,
             getAllCountriesUseCase = getAllCountriesUseCase,
             getCountryByNameUseCase = getCountryByNameUseCase,
+            getFavoriteCountriesUseCase = getFavoriteCountriesUseCase,
             refreshCountriesFromRemoteUseCase = refreshCountriesFromRemoteUseCase
         )
     }

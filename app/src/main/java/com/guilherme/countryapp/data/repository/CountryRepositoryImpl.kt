@@ -20,6 +20,10 @@ class CountryRepositoryImpl @Inject constructor(
         return localRepository.getCountryByName(country)
     }
 
+    override fun getFavoriteCountries(): Flow<List<Country>> {
+        return localRepository.getFavoriteCountry()
+    }
+
     override suspend fun insertCountry(country: Country) {
         localRepository.insertCountry(country)
     }

@@ -16,6 +16,9 @@ class LocalRepository @Inject constructor(
     fun getCountryByName(country: String): Flow<Country> =
         countryDao.getCountry(country).map { it.toCountry() }
 
+    fun getFavoriteCountry(): Flow<List<Country>> =
+        countryDao.getFavoriteCountries().map { list -> list.map { it.toCountry() } }
+
     suspend fun insertCountry(country: Country) =
         countryDao.insertCountry(country.toCountryEntity())
 

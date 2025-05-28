@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface ICountryRepository {
     fun getCountries(): Flow<List<Country>>
     fun getCountryByName(country: String): Flow<Country>
+    fun getFavoriteCountries(): Flow<List<Country>>
     suspend fun insertCountry(country:Country)
     suspend fun deleteCountry(country: Country)
     suspend fun updateCountry(country: Country)

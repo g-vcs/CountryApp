@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,7 +24,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.domain.model.CountryName
 import com.guilherme.countryapp.domain.model.Flags
-import com.guilherme.countryapp.presentation.ui.events.UiCountryListEvent
 import com.guilherme.countryapp.presentation.viewmodel.CountryListViewModel
 
 
@@ -37,20 +37,14 @@ fun CountryListScreen(
     val viewModel = hiltViewModel<CountryListViewModel>()
 
     LaunchedEffect(Unit) {
-        viewModel.uiCountryListEvent.collect { event ->
-            when (event) {
-                is UiCountryListEvent.AddToFavorite -> viewModel.addToFavorite(event.country)
-                is UiCountryListEvent.CountryClick -> navigation(event.country)
-            }
-        }
+        viewModel.observeCountries()
     }
 
     CountryList(
         modifier = Modifier.padding(paddingValues),
-        onCountryClick = viewModel::onCountryClicked
+        onCountryClick = navigation
     )
 }
-
 
 @Composable
 fun CountryList(
@@ -58,11 +52,11 @@ fun CountryList(
     onCountryClick: (Country) -> Unit
 ) {
     val viewModel: CountryListViewModel = hiltViewModel()
-    val countries = viewModel.countries.collectAsState(initial = emptyList())
+    val state by viewModel.state.collectAsState()
     LazyColumn(
         modifier = modifier
     ) {
-        items(countries.value) { country ->
+        items(state.countries) { country ->
             CountryItem(
                 country = country,
                 onCountryClick = { onCountryClick(country) }

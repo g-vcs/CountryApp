@@ -24,4 +24,7 @@ interface CountryDao {
 
     @Query("SELECT * from countries WHERE cca3 = :countryName")
     fun getCountry(countryName: String): Flow<CountryEntity>
+
+    @Query("SELECT * from countries WHERE isFavorite = 1")
+    fun getFavoriteCountries(): Flow<List<CountryEntity>>
 }

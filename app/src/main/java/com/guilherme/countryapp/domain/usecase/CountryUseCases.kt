@@ -6,5 +6,6 @@ data class CountryUseCases (
     val deleteCountryUseCase: DeleteCountryUseCase,
     val getAllCountriesUseCase: GetAllCountriesUseCase,
     val getCountryByNameUseCase: GetCountryByNameUseCase,
+    val getFavoriteCountriesUseCase: GetFavoriteCountriesUseCase,
     val refreshCountriesFromRemoteUseCase: RefreshCountriesFromRemoteUseCase,
 )
