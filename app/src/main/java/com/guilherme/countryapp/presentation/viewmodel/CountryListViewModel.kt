@@ -52,12 +52,6 @@ class CountryListViewModel @Inject constructor(
         }
     }
 
-    fun addToFavorite(country: Country) {
-        viewModelScope.launch {
-            repository.insertCountry(country)
-        }
-    }
-
     fun getFavoriteCountries() {
         viewModelScope.launch {
             repository.getFavoriteCountries()

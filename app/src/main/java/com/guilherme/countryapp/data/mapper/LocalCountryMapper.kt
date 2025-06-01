@@ -13,6 +13,7 @@ fun CountryEntity.toCountry(): Country = Country(
     subregion = subregion,
     population = population,
     flags = Flags(png = flagPng, svg = flagSvg, alt = null),
+    isFavorite = isFavorite
 )
 
 fun Country.toCountryEntity(): CountryEntity = CountryEntity(
@@ -24,4 +25,5 @@ fun Country.toCountryEntity(): CountryEntity = CountryEntity(
     population = population,
     flagPng = flags?.png,
     flagSvg = flags?.svg,
+    isFavorite = isFavorite
 )

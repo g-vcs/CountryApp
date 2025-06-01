@@ -59,11 +59,6 @@ class MainActivity : ComponentActivity() {
                                 text = "Bottom app bar",
                             )
                         }
-                    },
-                    floatingActionButton = {
-                        FloatingActionButton(onClick = {}) {
-                            Icon(Icons.Default.Add, contentDescription = "Add")
-                        }
                     }
                 ) { innerPadding ->
                     CountryNavHost(

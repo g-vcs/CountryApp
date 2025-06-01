@@ -7,7 +7,8 @@ data class Country(
     val region: String?,
     val subregion: String?,
     val population: Long?,
-    val flags: Flags?
+    val flags: Flags?,
+    val isFavorite: Boolean = false
 )
 
 data class CountryName(
