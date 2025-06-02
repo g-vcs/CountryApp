@@ -5,6 +5,7 @@ import com.guilherme.countryapp.domain.model.Country
 data class CountryListState(
     val countries: List<Country> = emptyList(),
     val favorites: List<Country> = emptyList(),
+    val searchQuery: String = "",
     val isShowingFavorites: Boolean = false,
     val selectedCountry: Country? = null,
     val isLoading: Boolean = false,

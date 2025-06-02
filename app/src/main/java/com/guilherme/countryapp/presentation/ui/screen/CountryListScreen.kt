@@ -1,23 +1,28 @@
 package com.guilherme.countryapp.presentation.ui.screen
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,13 +40,14 @@ fun CountryListScreen(
     modifier: Modifier
 ) {
     val viewModel = hiltViewModel<CountryListViewModel>()
-
-    LaunchedEffect(Unit) {
-        viewModel.observeCountries()
-    }
+    val uiState by viewModel.state.collectAsState()
+    val countryList by viewModel.searchedCountries.collectAsState()
 
     CountryList(
         modifier = Modifier.padding(paddingValues),
+        viewModel = viewModel,
+        searchQuery = uiState.searchQuery,
+        searchedCountries = countryList,
         onCountryClick = navigation
     )
 }
@@ -49,22 +55,32 @@ fun CountryListScreen(
 @Composable
 fun CountryList(
     modifier: Modifier,
+    viewModel: CountryListViewModel,
+    searchQuery: String,
+    searchedCountries: List<Country>,
     onCountryClick: (Country) -> Unit
 ) {
-    val viewModel: CountryListViewModel = hiltViewModel()
-    val state by viewModel.state.collectAsState()
-    LazyColumn(
+
+    Column(
         modifier = modifier
+            .fillMaxSize()
     ) {
-        items(state.countries) { country ->
-            CountryItem(
-                country = country,
-                onCountryClick = { onCountryClick(country) }
-            )
+        SearchBar(searchQuery, viewModel)
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            items(searchedCountries) { country ->
+                CountryItem(
+                    country = country,
+                    onCountryClick = { onCountryClick(country) }
+                )
+            }
         }
     }
 }
-
 
 @Composable
 fun CountryItem(
@@ -88,6 +104,26 @@ fun CountryItem(
             style = MaterialTheme.typography.titleMedium
         )
     }
+}
+
+@Composable
+fun SearchBar(
+    searchQuery: String,
+    viewModel: CountryListViewModel
+) {
+    OutlinedTextField(
+        value = searchQuery,
+        onValueChange = viewModel::onSearchQueryChanged,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        placeholder = { Text("Search country", color = Color.Gray) },
+        singleLine = true,
+        keyboardActions = KeyboardActions(onSearch = {}),
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Text
+        ),
+    )
 }
 
 @Preview

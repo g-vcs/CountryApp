@@ -2,13 +2,15 @@ package com.guilherme.countryapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.domain.repository.ICountryRepository
 import com.guilherme.countryapp.presentation.ui.navigation.NavigationDestination
 import com.guilherme.countryapp.presentation.ui.states.CountryListState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +27,23 @@ class CountryListViewModel @Inject constructor(
     private val allCountries = repository.getCountries()
     private val favoritesCountries = repository.getFavoriteCountries()
 
-    val _state = MutableStateFlow(CountryListState())
+    private val _state = MutableStateFlow(CountryListState())
     val state = _state.asStateFlow()
+
+    val searchedCountries = state
+        .combine(allCountries) { query, countries ->
+            if (query.searchQuery.isBlank()) {
+                countries
+            } else {
+                countries.filter {
+                    it.name?.common?.contains(query.searchQuery.trim(), ignoreCase = true) == true
+                }
+            }
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
 
     init {
         fetchCountries()
@@ -38,18 +55,9 @@ class CountryListViewModel @Inject constructor(
         }
     }
 
-    fun observeCountries() {
-        viewModelScope.launch {
-            allCountries.collect { countries ->
-                _state.value = _state.value.copy(countries = countries)
-            }
-        }
-    }
 
-    fun onCountryClicked(country: Country) {
-        viewModelScope.launch {
-            _state.value = _state.value.copy(selectedCountry = country)
-        }
+    fun onSearchQueryChanged(query: String) {
+        _state.value = _state.value.copy(searchQuery = query)
     }
 
     fun getFavoriteCountries() {
