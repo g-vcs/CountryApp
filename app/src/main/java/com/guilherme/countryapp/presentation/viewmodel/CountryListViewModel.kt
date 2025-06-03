@@ -34,7 +34,7 @@ class CountryListViewModel @Inject constructor(
         combine(state, allCountries, favoritesCountries) { uiState, countries, favorites ->
             val query = uiState.searchQuery.trim()
 
-            if (uiState.isShowingFavorites) {
+            val filteredList = if (uiState.isShowingFavorites) {
                 favorites.filter {
                     it.name?.common?.contains(query, ignoreCase = true) == true
                 }
@@ -44,6 +44,17 @@ class CountryListViewModel @Inject constructor(
                 }
             }
 
+            if (filteredList.isEmpty() && countries.isEmpty()) {
+                _state.value = _state.value.copy(
+                    error = "No network connection",
+                    isLoading = false
+                )
+            } else {
+                if (_state.value.error != null) {
+                    _state.value = _state.value.copy(error = null)
+                }
+            }
+            filteredList
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -56,7 +67,16 @@ class CountryListViewModel @Inject constructor(
 
     fun fetchCountries() {
         viewModelScope.launch {
-            repository.refreshCountriesFromRemote()
+            _state.value = _state.value.copy(isLoading = true)
+            try {
+                repository.refreshCountriesFromRemote()
+                _state.value = _state.value.copy(isLoading = false)
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    error = "Error while fetching countries: ${e.message}"
+                )
+            }
         }
     }
 
