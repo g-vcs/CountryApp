@@ -1,8 +1,10 @@
 package com.guilherme.countryapp.presentation.ui.screen
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,7 +31,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.domain.model.CountryName
 import com.guilherme.countryapp.domain.model.Flags
+import com.guilherme.countryapp.presentation.ui.states.CountryListState
 import com.guilherme.countryapp.presentation.viewmodel.CountryListViewModel
+import com.popovanton0.heartswitch.HeartSwitch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,7 +50,7 @@ fun CountryListScreen(
     CountryList(
         modifier = Modifier.padding(paddingValues),
         viewModel = viewModel,
-        searchQuery = uiState.searchQuery,
+        uiState = uiState,
         searchedCountries = countryList,
         onCountryClick = navigation
     )
@@ -56,7 +60,7 @@ fun CountryListScreen(
 fun CountryList(
     modifier: Modifier,
     viewModel: CountryListViewModel,
-    searchQuery: String,
+    uiState: CountryListState,
     searchedCountries: List<Country>,
     onCountryClick: (Country) -> Unit
 ) {
@@ -65,7 +69,19 @@ fun CountryList(
         modifier = modifier
             .fillMaxSize()
     ) {
-        SearchBar(searchQuery, viewModel)
+        SearchBar(uiState.searchQuery, viewModel)
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp, bottom = 8.dp, end = 16.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            SwitchToDisplayFavorites(
+                uiState.isShowingFavorites,
+                viewModel
+            )
+        }
 
         LazyColumn(
             modifier = Modifier
@@ -126,6 +142,17 @@ fun SearchBar(
     )
 }
 
+@Composable
+fun SwitchToDisplayFavorites(
+    isShowingFavorite: Boolean,
+    viewModel: CountryListViewModel
+) {
+    HeartSwitch(
+        checked = isShowingFavorite,
+        onCheckedChange = { viewModel.showFavorite(it) }
+    )
+}
+
 @Preview
 @Composable
 fun PreviewCountryItem() {
@@ -139,6 +166,6 @@ fun PreviewCountryItem() {
             population = 10196709,
             flags = Flags(png = "", svg = "", alt = null)
 
-        ), {}
-    )
+        )
+    ) {}
 }

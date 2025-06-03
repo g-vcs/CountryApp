@@ -30,15 +30,20 @@ class CountryListViewModel @Inject constructor(
     private val _state = MutableStateFlow(CountryListState())
     val state = _state.asStateFlow()
 
-    val searchedCountries = state
-        .combine(allCountries) { query, countries ->
-            if (query.searchQuery.isBlank()) {
-                countries
+    val searchedCountries =
+        combine(state, allCountries, favoritesCountries) { uiState, countries, favorites ->
+            val query = uiState.searchQuery.trim()
+
+            if (uiState.isShowingFavorites) {
+                favorites.filter {
+                    it.name?.common?.contains(query, ignoreCase = true) == true
+                }
             } else {
                 countries.filter {
-                    it.name?.common?.contains(query.searchQuery.trim(), ignoreCase = true) == true
+                    it.name?.common?.contains(query, ignoreCase = true) == true
                 }
             }
+
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -60,10 +65,8 @@ class CountryListViewModel @Inject constructor(
         _state.value = _state.value.copy(searchQuery = query)
     }
 
-    fun getFavoriteCountries() {
-        viewModelScope.launch {
-            repository.getFavoriteCountries()
-        }
-    }
+    fun showFavorite(isShown: Boolean) {
+        _state.value = _state.value.copy(isShowingFavorites = isShown)
 
+    }
 }
