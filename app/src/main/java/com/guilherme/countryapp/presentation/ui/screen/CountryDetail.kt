@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil3.compose.AsyncImage
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.presentation.ui.events.CountryDetailEvent
 import com.guilherme.countryapp.presentation.viewmodel.CountryDetailViewModel
@@ -55,6 +56,11 @@ fun CountryDetail(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            AsyncImage(
+                model = country.selectedCountry?.flags?.png ?: country.selectedCountry?.flags?.svg,
+                contentDescription = country.selectedCountry?.flags?.alt
+            )
+
             Text(
                 text = country.selectedCountry?.name?.common ?: "Unknown",
                 style = MaterialTheme.typography.headlineMedium,

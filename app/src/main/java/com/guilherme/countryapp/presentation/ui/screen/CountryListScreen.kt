@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,10 +28,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil3.compose.AsyncImage
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.domain.model.CountryName
 import com.guilherme.countryapp.domain.model.Flags
@@ -124,11 +127,23 @@ fun CountryItem(
             onCountryClick()
         }
     ) {
-        Text(
-            modifier = Modifier.padding(12.dp),
-            text = country.name?.common ?: "Unknown",
-            style = MaterialTheme.typography.titleMedium
-        )
+        Row(
+            modifier = Modifier
+        ) {
+            AsyncImage(
+                modifier = Modifier
+                    .size(48.dp)
+                    .padding(start = 16.dp, top = 4.dp, bottom = 4.dp),
+                model = country.flags?.png ?: country.flags?.svg,
+                contentDescription = country.flags?.alt,
+            )
+
+            Text(
+                modifier = Modifier.padding(12.dp),
+                text = country.name?.common ?: "Unknown",
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
     }
 }
 
