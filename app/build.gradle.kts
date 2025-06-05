@@ -85,4 +85,17 @@ dependencies {
     // Coil
     implementation("io.coil-kt.coil3:coil-compose:3.2.0")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.2.0")
+
+    // JUnit
+    testImplementation("junit:junit:4.13.2")
+
+    // MockK
+    testImplementation("io.mockk:mockk:1.13.5")
+
+    // Test coroutines
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation(kotlin("test"))
+
+    // Turbine
+    testImplementation("app.cash.turbine:turbine:1.0.0")
 }
