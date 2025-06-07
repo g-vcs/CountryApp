@@ -3,8 +3,6 @@ package com.guilherme.countryapp.data.remote
 import android.util.Log
 import com.guilherme.countryapp.data.mapper.toCountry
 import com.guilherme.countryapp.domain.model.Country
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject

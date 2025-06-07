@@ -5,25 +5,29 @@ import com.guilherme.countryapp.domain.model.CountryName
 import com.guilherme.countryapp.domain.model.Flags
 
 object MockUtil {
+        val mockCountryPT = Country(
+        "PT",
+        CountryName("Portugal", "República Portuguesa"),
+        listOf("Lisboa"),
+        "Europe",
+        "Southern",
+        10000000,
+        Flags("", "", null)
+    )
+
+    private val mockCountryES = Country(
+        "ES",
+        CountryName("Espanha", "Reino de Espanha"),
+        listOf("Madrid"),
+        "Europe",
+        "Southern",
+        46000000,
+        Flags("", "", null)
+    )
 
     val listOfCountries = listOf(
-        Country(
-            "PT",
-            CountryName("Portugal", "República Portuguesa"),
-            listOf("Lisboa"),
-            "Europe",
-            "Southern",
-            10000000,
-            Flags("", "", null)
-        ),
-        Country(
-            "ES",
-            CountryName("Espanha", "Reino de Espanha"),
-            listOf("Madrid"),
-            "Europe",
-            "Southern",
-            46000000,
-            Flags("", "", null)
-        )
+        mockCountryPT,
+        mockCountryES
     )
+
 }
