@@ -64,8 +64,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Retrofit
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
     // Hilt Dagger
     implementation(libs.hilt.android)
@@ -86,19 +86,19 @@ dependencies {
     implementation(libs.heart.switch)
 
     // Coil
-    implementation("io.coil-kt.coil3:coil-compose:3.2.0")
-    implementation("io.coil-kt.coil3:coil-network-okhttp:3.2.0")
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     // JUnit
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 
     // MockK
-    testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation(libs.mockk)
 
     // Test coroutines
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(kotlin("test"))
 
     // Turbine
-    testImplementation("app.cash.turbine:turbine:1.0.0")
+    testImplementation(libs.turbine)
 }
