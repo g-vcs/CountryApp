@@ -60,7 +60,8 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     val fileFilter = listOf(
         "**/R.class", "**/R$*.class", "**/BuildConfig.*",
         "**/Manifest*.*", "**/*Test*.*", "**/Hilt_*.class",
-        "**/*\$*\$InjectAdapter.class", "android/**/*.*"
+        "**/*\$*\$InjectAdapter.class", "android/**/*.*",
+        "**/CountryUseCases.class"
     )
 
     val includedPackages = listOf(
