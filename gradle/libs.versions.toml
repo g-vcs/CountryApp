@@ -17,6 +17,7 @@ composeBom = "2025.05.01"
 lifecycleRuntimeKtxVersion = "2.9.1"
 mockk = "1.13.5"
 navigationCompose = "2.9.0"
+orgJacocoCore = "0.8.12"
 retrofit = "2.11.0"
 roomRuntime = "2.7.1"
 turbine = "1.0.0"
@@ -51,6 +52,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "orgJacocoCore" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 

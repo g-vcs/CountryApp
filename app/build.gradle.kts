@@ -5,6 +5,7 @@ plugins {
 
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("jacoco")
 }
 
 android {
@@ -29,6 +30,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            enableUnitTestCoverage = true
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -42,6 +46,57 @@ android {
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
+    }
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val fileFilter = listOf(
+        "**/R.class", "**/R$*.class", "**/BuildConfig.*",
+        "**/Manifest*.*", "**/*Test*.*", "**/Hilt_*.class",
+        "**/*\$*\$InjectAdapter.class", "android/**/*.*"
+    )
+
+    val includedPackages = listOf(
+        "com/guilherme/countryapp/presentation/viewmodel/**",
+        "com/guilherme/countryapp/domain/usecase/**",
+        "com/guilherme/countryapp/data/repository/**",
+        "com/guilherme/countryapp/domain/model/**"
+    )
+
+    classDirectories.setFrom(
+        files(
+            fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/debug").get().asFile) {
+                include(includedPackages)
+                exclude(fileFilter)
+            },
+            fileTree(layout.buildDirectory.dir("/intermediates/javac/debug/classes").get().asFile) {
+                include(includedPackages)
+                exclude(fileFilter)
+            }
+        )
+    )
+
+    sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
+
+    executionData.setFrom(
+
+        fileTree(layout.buildDirectory.get().asFile) {
+            include(
+                "jacoco/testDebugUnitTest.exec",
+                "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+            )
+        }
+    )
+
+    doLast {
+        println("✔ JaCoCo report generated: file://${layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/html/index.html")
     }
 }
 
