@@ -36,7 +36,7 @@ class CountryDetailViewModel @Inject constructor(
         }
     }
 
-    fun addToFavorite(country: Country?) {
+    private fun addToFavorite(country: Country?) {
         country?.let {
             val updateCountry = it.copy(isFavorite = !it.isFavorite)
             viewModelScope.launch {
