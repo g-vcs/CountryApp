@@ -5,6 +5,9 @@ import com.guilherme.countryapp.data.local.LocalRepository
 import com.guilherme.countryapp.data.remote.RemoteRepository
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.domain.repository.ICountryRepository
+import com.guilherme.countryapp.utils.MockUtil.mockCountryBR
+import com.guilherme.countryapp.utils.MockUtil.mockCountryPT
+import com.guilherme.countryapp.utils.MockUtil.mockCountryES
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -39,6 +42,9 @@ class CountryRepositoryImpl @Inject constructor(
     override suspend fun refreshCountriesFromRemote() {
         val remoteCountries = remoteRepository.refreshCountriesFromRemote()
         Log.d("NETWORK", "remote countries: $remoteCountries")
+        localRepository.insertCountry(mockCountryBR)
+        localRepository.insertCountry(mockCountryPT)
+        localRepository.insertCountry(mockCountryES)
         remoteCountries.forEach { localRepository.insertCountry(it) }
 
     }

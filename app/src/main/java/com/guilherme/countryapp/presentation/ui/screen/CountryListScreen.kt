@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +37,7 @@ import com.guilherme.countryapp.domain.model.CountryName
 import com.guilherme.countryapp.domain.model.Flags
 import com.guilherme.countryapp.presentation.ui.states.CountryListState
 import com.guilherme.countryapp.presentation.viewmodel.CountryListViewModel
+import com.guilherme.countryapp.utils.MockUtil.listOfCountries
 import com.popovanton0.heartswitch.HeartSwitch
 
 
@@ -46,15 +45,14 @@ import com.popovanton0.heartswitch.HeartSwitch
 @Composable
 fun CountryListScreen(
     navigation: (Country) -> Unit = {},
-    paddingValues: PaddingValues,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<CountryListViewModel>()
     val uiState by viewModel.state.collectAsState()
     val countryList by viewModel.searchedCountries.collectAsState()
 
     CountryList(
-        modifier = Modifier.padding(paddingValues),
+        modifier = modifier,
         viewModel = viewModel,
         uiState = uiState,
         searchedCountries = countryList,
@@ -89,23 +87,24 @@ fun CountryList(
                 )
             }
 
-            if (uiState.error != null && searchedCountries.isEmpty()) {
-                ShowErrorMessage(uiState)
-            }
+            /*            if (uiState.error != null && searchedCountries.isEmpty()) {
+                            ShowErrorMessage(uiState)
+                        }
 
-            if (!uiState.isLoading && uiState.error == null) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
-                    items(searchedCountries) { country ->
-                        CountryItem(
-                            country = country,
-                            onCountryClick = { onCountryClick(country) }
-                        )
-                    }
+                        if (!uiState.isLoading && uiState.error == null) {*/
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                items(listOfCountries) { country ->
+
+                    CountryItem(
+                        country = country,
+                        onCountryClick = { onCountryClick(country) }
+                    )
                 }
+                // }
             }
         }
     }

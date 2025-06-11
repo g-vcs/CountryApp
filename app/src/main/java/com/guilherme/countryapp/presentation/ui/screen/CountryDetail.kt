@@ -35,7 +35,6 @@ import com.guilherme.countryapp.presentation.viewmodel.CountryDetailViewModel
 
 @Composable
 fun CountryDetail(
-    paddingValues: PaddingValues,
     cca3: String,
 ) {
     val viewmodel: CountryDetailViewModel = hiltViewModel()
@@ -48,7 +47,6 @@ fun CountryDetail(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues),
     ) {
         Column(
             modifier = Modifier
