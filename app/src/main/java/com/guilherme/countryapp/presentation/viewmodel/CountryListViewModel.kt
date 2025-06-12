@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 object CountryDestination : NavigationDestination {
@@ -46,7 +48,6 @@ class CountryListViewModel @Inject constructor(
 
             if (filteredList.isEmpty() && countries.isEmpty()) {
                 _state.value = _state.value.copy(
-                    error = "No network connection",
                     isLoading = false
                 )
             } else {
@@ -72,14 +73,19 @@ class CountryListViewModel @Inject constructor(
                 repository.refreshCountriesFromRemote()
                 _state.value = _state.value.copy(isLoading = false)
             } catch (e: Exception) {
+                val errorMessage = when (e) {
+                    is HttpException -> e.message
+                    is IOException -> "${e.message} - No network connection"
+                    else -> e.message ?: "Unknown error"
+                }
+
                 _state.value = _state.value.copy(
                     isLoading = false,
-                    error = "Error while fetching countries: ${e.message}"
+                    error = "Error while fetching countries: $errorMessage"
                 )
             }
         }
     }
-
 
     fun onSearchQueryChanged(query: String) {
         _state.value = _state.value.copy(searchQuery = query)
