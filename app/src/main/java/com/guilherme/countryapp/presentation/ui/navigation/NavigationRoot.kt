@@ -9,15 +9,19 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
+import com.guilherme.countryapp.presentation.ui.navigation.Navigation.CountryDetailNav
+import com.guilherme.countryapp.presentation.ui.navigation.Navigation.CountryListScreenNav
 import com.guilherme.countryapp.presentation.ui.screen.CountryDetail
 import com.guilherme.countryapp.presentation.ui.screen.CountryListScreen
 import kotlinx.serialization.Serializable
 
-@Serializable
-data object CountryListScreenNav : NavKey
+sealed class Navigation : NavKey {
+    @Serializable
+    data object CountryListScreenNav : Navigation()
 
-@Serializable
-data class CountryDetailNav(val cca3: String) : NavKey
+    @Serializable
+    data class CountryDetailNav(val cca3: String) : Navigation()
+}
 
 @Composable
 fun NavigationRoot(
@@ -31,13 +35,11 @@ fun NavigationRoot(
             rememberViewModelStoreNavEntryDecorator(),
             rememberSceneSetupNavEntryDecorator()
         ),
+        onBack = { backStack.removeLastOrNull() },
         entryProvider = { key ->
             when (key) {
                 is CountryListScreenNav -> {
-                    NavEntry(
-                        key = key,
-
-                        ) {
+                    NavEntry(key = key) {
                         CountryListScreen(
                             navigation = { country ->
                                 country.cca3?.let {
@@ -47,17 +49,11 @@ fun NavigationRoot(
                         )
                     }
                 }
-
                 is CountryDetailNav -> {
-                    NavEntry(
-                        key = key,
-
-                        ) {
+                    NavEntry(key = key) {
                         CountryDetail(cca3 = key.cca3)
                     }
-
                 }
-
                 else -> throw RuntimeException("Invalid NavKey")
             }
         }

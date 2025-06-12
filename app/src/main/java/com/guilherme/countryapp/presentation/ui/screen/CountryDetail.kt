@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.presentation.ui.events.CountryDetailEvent
@@ -37,7 +38,7 @@ fun CountryDetail(
     cca3: String,
 ) {
     val viewmodel: CountryDetailViewModel = hiltViewModel()
-    val country by viewmodel.state.collectAsState()
+    val country by viewmodel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(cca3) {
         viewmodel.loadClickedCountry(cca3)
