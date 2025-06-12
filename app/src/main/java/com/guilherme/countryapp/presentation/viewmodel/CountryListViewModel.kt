@@ -48,7 +48,6 @@ class CountryListViewModel @Inject constructor(
 
             if (filteredList.isEmpty() && countries.isEmpty()) {
                 _state.value = _state.value.copy(
-                    //error = "No network connection",
                     isLoading = false
                 )
             } else {
