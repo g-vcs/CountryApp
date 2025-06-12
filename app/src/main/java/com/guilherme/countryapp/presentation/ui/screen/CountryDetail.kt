@@ -3,7 +3,6 @@ package com.guilherme.countryapp.presentation.ui.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.presentation.ui.events.CountryDetailEvent
@@ -35,11 +35,10 @@ import com.guilherme.countryapp.presentation.viewmodel.CountryDetailViewModel
 
 @Composable
 fun CountryDetail(
-    paddingValues: PaddingValues,
     cca3: String,
 ) {
     val viewmodel: CountryDetailViewModel = hiltViewModel()
-    val country by viewmodel.state.collectAsState()
+    val country by viewmodel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(cca3) {
         viewmodel.loadClickedCountry(cca3)
@@ -48,7 +47,6 @@ fun CountryDetail(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues),
     ) {
         Column(
             modifier = Modifier
