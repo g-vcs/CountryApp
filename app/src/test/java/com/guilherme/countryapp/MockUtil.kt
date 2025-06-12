@@ -5,14 +5,15 @@ import com.guilherme.countryapp.domain.model.CountryName
 import com.guilherme.countryapp.domain.model.Flags
 
 object MockUtil {
-        val mockCountryPT = Country(
+    val mockCountryPT = Country(
         "PT",
         CountryName("Portugal", "República Portuguesa"),
         listOf("Lisboa"),
         "Europe",
         "Southern",
         10000000,
-        Flags("", "", null)
+        Flags("", "", null),
+        isFavorite = false
     )
 
     private val mockCountryES = Country(
