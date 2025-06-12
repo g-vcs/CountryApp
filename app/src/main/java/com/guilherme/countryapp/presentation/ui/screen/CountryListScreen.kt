@@ -37,7 +37,6 @@ import com.guilherme.countryapp.domain.model.CountryName
 import com.guilherme.countryapp.domain.model.Flags
 import com.guilherme.countryapp.presentation.ui.states.CountryListState
 import com.guilherme.countryapp.presentation.viewmodel.CountryListViewModel
-import com.guilherme.countryapp.utils.MockUtil.listOfCountries
 import com.popovanton0.heartswitch.HeartSwitch
 
 
@@ -52,7 +51,7 @@ fun CountryListScreen(
     val countryList by viewModel.searchedCountries.collectAsState()
 
     CountryList(
-        modifier = modifier,
+        modifier = Modifier,
         viewModel = viewModel,
         uiState = uiState,
         searchedCountries = countryList,
@@ -87,24 +86,23 @@ fun CountryList(
                 )
             }
 
-            /*            if (uiState.error != null && searchedCountries.isEmpty()) {
-                            ShowErrorMessage(uiState)
-                        }
+            if (uiState.error != null && searchedCountries.isEmpty()) {
+                ShowErrorMessage(uiState)
+            }
 
-                        if (!uiState.isLoading && uiState.error == null) {*/
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                items(listOfCountries) { country ->
-
-                    CountryItem(
-                        country = country,
-                        onCountryClick = { onCountryClick(country) }
-                    )
+            if (!uiState.isLoading && uiState.error == null) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    items(searchedCountries) { country ->
+                        CountryItem(
+                            country = country,
+                            onCountryClick = { onCountryClick(country) }
+                        )
+                    }
                 }
-                // }
             }
         }
     }

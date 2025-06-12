@@ -1,6 +1,5 @@
 package com.guilherme.countryapp.presentation.ui.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -40,8 +39,10 @@ fun NavigationRoot(
 
                         ) {
                         CountryListScreen(
-                            navigation =  { country ->
-                                backStack.add(CountryDetailNav(cca3 = country.cca3!!))
+                            navigation = { country ->
+                                country.cca3?.let {
+                                    backStack.add(CountryDetailNav(it))
+                                }
                             }
                         )
                     }
