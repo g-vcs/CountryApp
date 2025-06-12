@@ -77,7 +77,7 @@ class CountryListViewModel @Inject constructor(
                 val errorMessage = when (e) {
                     is HttpException -> e.message
                     is IOException -> "${e.message} - No network connection"
-                    else -> {}
+                    else -> e.message ?: "Unknown error"
                 }
 
                 _state.value = _state.value.copy(
