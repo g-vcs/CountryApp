@@ -28,7 +28,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,6 +36,8 @@ import coil3.compose.AsyncImage
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.domain.model.CountryName
 import com.guilherme.countryapp.domain.model.Flags
+import com.guilherme.countryapp.presentation.ui.events.CountryListEvent
+import com.guilherme.countryapp.presentation.ui.events.CountryListEvent.ShowFavoriteCountries
 import com.guilherme.countryapp.presentation.ui.states.CountryListState
 import com.guilherme.countryapp.presentation.viewmodel.CountryListViewModel
 import com.popovanton0.heartswitch.HeartSwitch
@@ -46,16 +47,16 @@ import com.popovanton0.heartswitch.HeartSwitch
 @Composable
 fun CountryListScreen(
     navigation: (Country) -> Unit = {},
+    viewModel: CountryListViewModel = hiltViewModel(),
     paddingValues: PaddingValues,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
-    val viewModel = hiltViewModel<CountryListViewModel>()
     val uiState by viewModel.state.collectAsState()
     val countryList by viewModel.searchedCountries.collectAsState()
 
     CountryList(
-        modifier = Modifier.padding(paddingValues),
-        viewModel = viewModel,
+        modifier = modifier.padding(paddingValues),
+        onEvent = viewModel::onEvent,
         uiState = uiState,
         searchedCountries = countryList,
         onCountryClick = navigation
@@ -65,7 +66,7 @@ fun CountryListScreen(
 @Composable
 fun CountryList(
     modifier: Modifier,
-    viewModel: CountryListViewModel,
+    onEvent: (CountryListEvent) -> Unit,
     uiState: CountryListState,
     searchedCountries: List<Country>,
     onCountryClick: (Country) -> Unit
@@ -77,10 +78,10 @@ fun CountryList(
             modifier = modifier
                 .fillMaxSize()
         ) {
-            SearchBar(uiState.searchQuery, viewModel)
+            SearchBar(uiState.searchQuery, onEvent)
             HeartSwitchFavorites(
                 uiState,
-                viewModel,
+                onEvent,
             )
 
             if (uiState.isLoading) {
@@ -150,11 +151,11 @@ fun CountryItem(
 @Composable
 fun SearchBar(
     searchQuery: String,
-    viewModel: CountryListViewModel
+    onEvent: (event: CountryListEvent) -> Unit
 ) {
     OutlinedTextField(
         value = searchQuery,
-        onValueChange = viewModel::onSearchQueryChanged,
+        onValueChange = { onEvent(CountryListEvent.SearchQueryChanged(searchQuery)) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -171,7 +172,7 @@ fun SearchBar(
 @Composable
 fun HeartSwitchFavorites(
     uiState: CountryListState,
-    viewModel: CountryListViewModel
+    onEvent: (event: CountryListEvent) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -181,7 +182,7 @@ fun HeartSwitchFavorites(
     ) {
         HeartSwitch(
             checked = uiState.isShowingFavorites,
-            onCheckedChange = { viewModel.showFavorite(it) }
+            onCheckedChange = { onEvent(ShowFavoriteCountries(it)) }
         )
     }
 }

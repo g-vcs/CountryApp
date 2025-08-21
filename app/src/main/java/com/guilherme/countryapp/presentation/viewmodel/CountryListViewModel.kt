@@ -3,6 +3,7 @@ package com.guilherme.countryapp.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guilherme.countryapp.domain.repository.ICountryRepository
+import com.guilherme.countryapp.presentation.ui.events.CountryListEvent
 import com.guilherme.countryapp.presentation.ui.navigation.NavigationDestination
 import com.guilherme.countryapp.presentation.ui.states.CountryListState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -65,7 +66,14 @@ class CountryListViewModel @Inject constructor(
         fetchCountries()
     }
 
-    fun fetchCountries() {
+    fun onEvent(event: CountryListEvent) {
+        when (event) {
+            is CountryListEvent.ShowFavoriteCountries -> showFavorite(event.show)
+            is CountryListEvent.SearchQueryChanged -> onSearchQueryChanged(event.query)
+        }
+    }
+
+    private fun fetchCountries() {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
             try {
@@ -81,11 +89,11 @@ class CountryListViewModel @Inject constructor(
     }
 
 
-    fun onSearchQueryChanged(query: String) {
+    private fun onSearchQueryChanged(query: String) {
         _state.value = _state.value.copy(searchQuery = query)
     }
 
-    fun showFavorite(isShown: Boolean) {
+    private fun showFavorite(isShown: Boolean) {
         _state.value = _state.value.copy(isShowingFavorites = isShown)
 
     }

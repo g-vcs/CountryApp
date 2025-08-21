@@ -24,10 +24,11 @@ class CountryDetailViewModel @Inject constructor(
     fun onEvent(event: CountryDetailEvent) {
         when (event) {
             is CountryDetailEvent.AddToFavorite -> addToFavorite(country = event.country)
+            is CountryDetailEvent.LoadCountry -> loadClickedCountry(event.cca3)
         }
     }
 
-    fun loadClickedCountry(cca3: String) {
+    private fun loadClickedCountry(cca3: String) {
         viewModelScope.launch {
             repository.getCountryByName(cca3)
                 .collect { country ->

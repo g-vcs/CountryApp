@@ -18,7 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,9 +26,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.guilherme.countryapp.domain.model.Country
 import com.guilherme.countryapp.presentation.ui.events.CountryDetailEvent
+import com.guilherme.countryapp.presentation.ui.events.CountryDetailEvent.AddToFavorite
 import com.guilherme.countryapp.presentation.viewmodel.CountryDetailViewModel
 
 
@@ -37,12 +38,12 @@ import com.guilherme.countryapp.presentation.viewmodel.CountryDetailViewModel
 fun CountryDetail(
     paddingValues: PaddingValues,
     cca3: String,
+    viewmodel: CountryDetailViewModel = hiltViewModel()
 ) {
-    val viewmodel: CountryDetailViewModel = hiltViewModel()
-    val country by viewmodel.state.collectAsState()
+    val country by viewmodel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(cca3) {
-        viewmodel.loadClickedCountry(cca3)
+        viewmodel.onEvent(CountryDetailEvent.LoadCountry(cca3))
     }
 
     Box(
@@ -91,8 +92,9 @@ fun CountryDetail(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
-            country.selectedCountry
-        ) { viewmodel.onEvent(CountryDetailEvent.AddToFavorite(country.selectedCountry)) }
+            country = country.selectedCountry,
+            onClick = viewmodel::onEvent
+        )
     }
 }
 
@@ -113,10 +115,14 @@ fun CountryInfoRow(label: String, value: String) {
 }
 
 @Composable
-fun AddICountryToFavorite(modifier: Modifier, country: Country?, onClick: () -> Unit) {
+fun AddICountryToFavorite(
+    modifier: Modifier,
+    country: Country?,
+    onClick: (event: CountryDetailEvent) -> Unit
+) {
     Button(
         modifier = modifier,
-        onClick = onClick
+        onClick = { onClick(AddToFavorite(country)) }
     ) {
         country?.isFavorite?.let {
             if (it) {
